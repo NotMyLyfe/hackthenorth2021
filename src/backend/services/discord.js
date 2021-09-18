@@ -1,12 +1,14 @@
 require('dotenv').config();
-const DiscordRPC = require('discord-rpc');
+const discordRPC = require('../lib/discord-rpc');
+const events = require('events');
 
 const clientId = process.env.DISCORD_CLIENT_ID;
 const scopes = ['rpc', 'rpc.notifications.read'];
 const redirectUri = "http://127.0.0.1";
 const clientSecret = process.env.DISCORD_CLIENT_SECRET;
 
-const client = new DiscordRPC.Client({
+const messages = new events.EventEmitter();
+const client = new discordRPC.Client({
     transport: 'ipc'
 });
 
@@ -21,25 +23,10 @@ client.on('ready', async () => {
 
     client.on('NOTIFICATION_CREATE', (data) => {
         console.log(data);
+        messages.emit('message', data);
     })
-
 })
 
 client.login({clientId, scopes, redirectUri, clientSecret});
 
-process.stdin.resume();//so the program will not close instantly
-
-async function exitHandler(exitCode) {
-    try{
-        if (exitCode || exitCode === 0) console.log(exitCode);
-
-        if(unsubHandler){
-            await unsubHandler.unsubscribe();
-        }
-        process.exit((exitCode || exitCode === 0) ? exitCode : 0);
-    }
-    catch(e){
-        console.error("There was an error cleaning up. Exiting ungracefully.", e);
-        process.exit(1);
-    }
-}
+export default messages;

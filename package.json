@@ -19,8 +19,8 @@
     "ant-design-vue": "^1.7.8",
     "axios": "^0.21.4",
     "core-js": "^3.6.5",
-    "discord-rpc": "^4.0.1",
     "dotenv": "^10.0.0",
+    "node-fetch": "^2.6.2",
     "qs": "^6.10.1",
     "vue": "^3.0.0"
   },
