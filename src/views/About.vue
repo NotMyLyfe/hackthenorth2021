@@ -1,7 +1,11 @@
 <template>
   <div class="about">
     <div id = "mainPage">
-      <a-row>
+      <a-page-header
+        title="Main Menu"
+        sub-title = "Welcome to Focuscord!"
+      />
+      <a-row id = "changeStat">
         <a-col :span="24"> CURRENT STATUS:&nbsp;&nbsp;&nbsp;
           <a-cascader :options="options"
                       :display-render="displayRender"
