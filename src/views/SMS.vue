@@ -1,6 +1,5 @@
 <template>
-  <div id="mainPage">
-
+  <div>
     <a-layout style="padding: 24px; background-color: #fff">
       <a-page-header
           title="SMS Settings"
@@ -40,9 +39,6 @@
   
 </template>
 <style scoped>
-  #mainPage {
-    margin : 5vh 2.5vw;
-  }
   #configRow {
     margin-top: 1vh;
   }
