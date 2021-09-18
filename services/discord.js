@@ -8,7 +8,7 @@ const scopes = ['rpc', 'rpc.notifications.read'];
 const redirectUri = "http://127.0.0.1";
 const clientSecret = process.env.DISCORD_CLIENT_SECRET;
 
-export const messages = new events.EventEmitter();
+const messages = new events.EventEmitter();
 const client = new discordRPC.Client({
     transport: 'ipc'
 });
@@ -24,3 +24,5 @@ client.on('ready', async () => {
 })
 
 client.login({clientId, scopes, redirectUri, clientSecret});
+
+exports.modules = messages
