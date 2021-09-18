@@ -2,7 +2,7 @@ require("dotenv").config();
 import qs from "qs"
 const axios = require('axios');
 
-function sendSMS(phoneNumber, message){
+export default function sendSMS(phoneNumber, message){
     axios({
         method: "POST",
         url: `https://api.twilio.com/2010-04-01/Accounts/${process.env.TWILIO_ACCOUNT_SID}/Messages.json`,

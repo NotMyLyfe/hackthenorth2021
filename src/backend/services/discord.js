@@ -1,4 +1,5 @@
 require('dotenv').config();
+
 const discordRPC = require('../lib/discord-rpc');
 const events = require('events');
 
@@ -15,14 +16,11 @@ const client = new discordRPC.Client({
 let unsubHandler;
 
 client.on('ready', async () => {
-    console.log(client.application.name);
-    console.log(client.user.username);
-    console.log(client.user);
-
     unsubHandler = await client.subscribe('NOTIFICATION_CREATE');
 
     client.on('NOTIFICATION_CREATE', (data) => {
-        console.log(data);
+        // Check if ppl are cool or not
+        console.log("trying to emit");
         messages.emit('message', data);
     })
 })

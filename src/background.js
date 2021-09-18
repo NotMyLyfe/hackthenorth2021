@@ -1,10 +1,9 @@
 'use strict'
 
-import { app, protocol, BrowserWindow } from 'electron'
+import { app, protocol, BrowserWindow, nativeImage } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
 import installExtension, { VUEJS3_DEVTOOLS } from 'electron-devtools-installer'
-import "./backend/services/twilio"
-import messages from './backend/services/discord';
+import messages from './backend/services/discord'
 const isDevelopment = process.env.NODE_ENV !== 'production'
 
 // Scheme must be registered before the app is ready
@@ -66,6 +65,13 @@ app.on('ready', async () => {
     }
   }
   createWindow()
+  messages.on('message', data => {
+    console.log(data);
+    new Notification({
+      title : data.title,
+      body: data.body
+    }).show()
+  });
 })
 
 // Exit cleanly on request from parent process in development mode.
