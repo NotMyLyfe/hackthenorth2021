@@ -15,5 +15,10 @@
   "bugs": {
     "url": "https://github.com/NotMyLyfe/hackthenorth2021/issues"
   },
-  "homepage": "https://github.com/NotMyLyfe/hackthenorth2021#readme"
+  "homepage": "https://github.com/NotMyLyfe/hackthenorth2021#readme",
+  "dependencies": {
+    "axios": "^0.21.4",
+    "discord-rpc": "^4.0.1",
+    "express": "^4.17.1"
+  }
 }
