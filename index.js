@@ -1,3 +1,4 @@
+require("./handler/notifications");
 const app = require('express')();
 const api = require('./routes/api');
 
