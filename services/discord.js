@@ -25,4 +25,4 @@ client.on('ready', async () => {
 
 client.login({clientId, scopes, redirectUri, clientSecret});
 
-exports.modules = messages
+module.exports = messages
