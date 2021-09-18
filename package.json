@@ -19,5 +19,8 @@
   "dependencies": {
     "ant-design-vue": "^1.7.8",
     "vue": "^2.6.14"
+  },
+  "devDependencies": {
+    "electron": "^14.0.1"
   }
 }
