@@ -1,41 +1,66 @@
 <template>
   <div class="about">
-    <div>
+    <div id = "mainPage">
       <a-row>
-        <a-col :span="6"> CURRENT STATUS:
-          <!--<a-dropdown>
-            <a-menu slot="overlay" @click="handleMenuClick">
-              <a-menu-item key="1">
-                <a-icon type="poweroff" />Disabled
-              </a-menu-item>
-              <a-menu-divider/>
-              <a-menu-item key="2">
-                <a-icon type="user" />Urgent-Only
-              </a-menu-item>
-              <a-menu-item key="3">
-                <a-icon type="user" />Urgent-To-SMS
-              </a-menu-item>
-              <a-menu-divider/>
-            </a-menu>
-            <a-button style="margin-left: 8px">
-              Button <a-icon type="down" />
-            </a-button>
-          </a-dropdown>-->
+        <a-col :span="24"> CURRENT STATUS:&nbsp;&nbsp;&nbsp;
           <a-cascader :options="options"
                       :display-render="displayRender"
-                      placeholder="Select Status" 
-                      @change="onChange" />
+                      placeholder="Select Status"
+                      @change="switchMode" />
         </a-col>
       </a-row>
-      <a-row>
+      <a-row class="inbtw">
         <a-col :span="6"> Only allow notifications for: 
         </a-col>
       </a-row>
-      
-      
+      <a-row class="inbtw"></a-row>
+      <a-list class="listScroller" item-layout="horizontal" :data-source="data">
+        <a-list-item slot="renderItem" slot-scope="item">
+          <!--<a-list-item-meta
+            description="Ant Design, a design language for background applications, is refined by Ant UED Team"
+          >
+            <a slot="title" href="https://www.antdv.com/">{{ item.title }}</a>
+            <a-avatar
+              slot="avatar"
+              src="https://cdn.discordapp.com/attachments/698731617207844895/883936323772239902/richman.jpeg"
+            />
+          </a-list-item-meta>-->
+          <a-list-item-meta :description="item.userid">
+            <a slot="title" >{{ item.username }}</a>
+            <a-avatar slot="avatar" :src="item.pfp"></a-avatar>
+          </a-list-item-meta>
+        </a-list-item>
+      </a-list>
+      <a-row type = "flex" justify="end" id = "configRow">
+        <a-col :span="6">
+          <a-button id = "configBtn" type="primary">Configure Users</a-button>
+        </a-col>
+      </a-row>      
     </div>
+
   </div>
 </template>
+<style scoped>
+  #mainPage {
+    margin : 5vh 2.5vw;
+  }
+  #changeStat {
+    font-weight: bold;
+  }
+  #configBtn {
+    float: right;
+  }
+  #configRow {
+    padding-top : 1vh;
+  }
+  .listScroller {
+    max-height: 30vh;
+    overflow: scroll;
+  }
+  .inbtw {
+    margin-top: 1vh;
+  }
+</style>
 <script>
 /*import { defineComponent } from '@vue/composition-api'
 export default defineComponent({
@@ -43,9 +68,56 @@ export default defineComponent({
     
   },
 })*/
+const data = [
+  {
+    username : 'sa35577#6753',
+    userid : 454791971244867620,
+    pfp : 'https://cdn.discordapp.com/attachments/698731617207844895/883936323772239902/richman.jpeg',
+    
+  },
+  {
+    username : 'DavidH#0001',
+    userid : 859093199390113803,
+    pfp : 'https://cdn.discordapp.com/attachments/698731617207844895/888802373336727612/unknown.png'
+  },
+  {
+    username : 'TernMaex#6753',
+    userid : 454791971244867620,
+    pfp : 'https://cdn.discordapp.com/attachments/698731617207844895/883936323772239902/richman.jpeg',
+    
+  },
+  {
+    username : 'Sat#0001',
+    userid : 859093199390113803,
+    pfp : 'https://cdn.discordapp.com/attachments/698731617207844895/888802373336727612/unknown.png'
+  },
+  {
+    username : 'Gith#6753',
+    userid : 454791971244867620,
+    pfp : 'https://cdn.discordapp.com/attachments/698731617207844895/883936323772239902/richman.jpeg',
+    
+  },
+  {
+    username : 'MaexTurning#0001',
+    userid : 859093199390113803,
+    pfp : 'https://cdn.discordapp.com/attachments/698731617207844895/888802373336727612/unknown.png'
+  },
+  {
+    username : 'Armaan#6753',
+    userid : 454791971244867620,
+    pfp : 'https://cdn.discordapp.com/attachments/698731617207844895/883936323772239902/richman.jpeg',
+    
+  },
+  {
+    username : 'GordonLiLin#0001',
+    userid : 859093199390113803,
+    pfp : 'https://cdn.discordapp.com/attachments/698731617207844895/888802373336727612/unknown.png'
+  },
+]
 export default {
   data() {
     return {
+      data,
       options : [
         {
           value : 'disabled',
@@ -69,10 +141,7 @@ export default {
           value : 'custom',
           label : 'Custom',
           children : [
-            {
-              value : 'new-profile',
-              label : 'Create New Profile'
-            }
+            
           ],
         },
 
@@ -86,6 +155,9 @@ export default {
     displayRender({ labels }) {
       return labels[labels.length-1];
     },
+    switchMode() {
+
+    }
   }
 }
 </script>

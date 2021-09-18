@@ -22,6 +22,11 @@ const routes = [
     path: '/configuration',
     name: 'Configuration',
     component: () => import('../views/Configuration.vue')
+  },
+  {
+    path : '/sms',
+    name : 'SMS',
+    component: () => import('../views/SMS.vue')
   }
 ]
 
