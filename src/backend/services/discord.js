@@ -43,20 +43,3 @@ async function exitHandler(exitCode) {
         process.exit(1);
     }
 }
-
-function raiseSigint() {
-    process.emit("SIGINT");
-}
-
-//catches ctrl+c event
-process.on('SIGINT', exitHandler.bind(null));
-
-// catches "kill pid" (for example: nodemon restart)
-process.on('SIGUSR1', exitHandler.bind(null));
-process.on('SIGUSR2', exitHandler.bind(null));
-
-//catches uncaught exceptions
-process.on('uncaughtException', function(err){
-    console.error(err);
-    raiseSigint();
-});
