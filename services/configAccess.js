@@ -54,41 +54,37 @@ class ConfigAccess{
         return this.configuration["configs"][name];
     }
 
-    getType(name){
-        return this.configuration["configs"][name]["type"];
+    getAutomation(name){
+        return this.configuration["configs"][name]["automation"];
     }
 
-    getTrigger(name){
-        return this.configuration["configs"][name]["trigger"];
-    }
 
     getSound(name){
         return this.configuration["configs"][name]["sound"];
     }
 
-    getIsUrgent(name){
-        return this.configuration["configs"][name]["isUrgent"];
+    getAutomationData(name){
+        return this.configuration["configs"][name]["automationData"];
     }
 
     // Setters
 
-    setType(name, type){
-        this.configuration["configs"][name]["type"] = type;
-    }
-
-    setTrigger(name, trigger){
-        this.configuration["configs"][name]["trigger"] = trigger;
+    setAutomation(name, automation){
+        this.configuration["configs"][name]["automation"] = automation;
     }
 
     setSound(name, sound){
         this.configuration["configs"][name]["sound"] = sound;
     }
 
-    setIsUrgent(name, isUrgent){
-        this.configuration["configs"][name]["isUrgent"] = isUrgent;
+    setAutomationData(name, automationData){
+        this.configuration["configs"][name]["automationData"] = automationData;
     }
 
     // User related
+	setUsers(name, users) {
+		this.configuration["configs"][name]["users"] = users;
+	}
     addUserToConfig(name, userID){
         this.configuration["configs"][name]["users"].push(userID);
     }
@@ -104,18 +100,20 @@ class ConfigAccess{
 
     // Entire config related
 
-    addConfig(name, type, trigger, sound, isUrgent, users){
+    addConfig(name, sound, automation, automationData, users){
         let configJSON = {
-                    type: type,
-                    trigger: trigger,
                     sound: sound,
-                    isUrgent: isUrgent,
+                    automation: automation,
+					automationData: automationData,
                     users: users};
         this.configuration["configs"][name] = configJSON;
     }
 
     deleteConfig(name){
-        delete configJSON["configs"][name];
+		if(this.configuration["currentConfig"] === name){
+			this.configuration["currentConfig"] = "Disabled";
+		}
+        delete this.configuration["configs"][name];
     }
 
     setCurrentConfig(name){

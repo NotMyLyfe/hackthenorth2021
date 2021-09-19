@@ -6,9 +6,16 @@ const jsonfile = require('jsonfile');
 
 
 router.get('/current', (req, res, next) => {
-    res.status(200).send(ConfigAccess.getCurrentConfig());
+    res.status(200).send({
+		mode: ConfigAccess.getCurrentConfig() || "Disabled"
+	});
 });
 
+router.post('/current', (req, res, next) => {
+	if(!req.body.name) res.status(400).send();
+	ConfigAccess.setCurrentConfig(req.body.name)
+    res.status(200).send();
+});
 router.get('/all', (req, res, next) => {
     res.status(200).send(ConfigAccess.getAllConfigNames());
 });
@@ -36,11 +43,11 @@ router.get('/user', (req, res, next) => {
 });
 
 router.put('/mode', (req, res, next) => {
-    if(!req.body.name || !req.body.type || !req.body.trigger || !req.body.sound || !req.body.isUrgent){
+    if(!req.body.name || req.body.sound === undefined || req.body.automation === undefined || req.body.automationData === undefined){
         res.status(400).send();
     }
     else{
-        ConfigAccess.addConfig(req.body.name, req.body.type, req.body.trigger, req.body.sound, req.body.isUrgent, req.body.users? req.body.users : []);
+        ConfigAccess.addConfig(req.body.name, req.body.sound, req.body.automation, req.body.automationData, req.body.users? req.body.users : []);
         res.status(201).send();
     }
 });
@@ -48,14 +55,14 @@ router.put('/mode', (req, res, next) => {
 router.post('/mode', (req, res, next) => {
     if(!req.body.name)
         return res.status(400).send();
-    if(req.body.type)
-        ConfigAccess.setType(req.body.name, req.body.type)
-    if(req.body.trigger)
-        ConfigAccess.setTrigger(req.body.name, req.body.trigger)
-    if(req.body.sound)
+    if(req.body.automation !== undefined)
+        ConfigAccess.setAutomation(req.body.name, req.body.automation)
+    if(req.body.sound !== undefined)
         ConfigAccess.setSound(req.body.name, req.body.sound)
-    if(req.body.isUrgent)
-        ConfigAccess.setSound(req.body.name, req.body.isUrgent)
+    if(req.body.automationData !== undefined)
+        ConfigAccess.setAutomationData(req.body.name, req.body.automationData)
+	if(req.body.users !== undefined)
+		ConfigAccess.setUsers(req.body.name, req.body.users)
     res.status(200).send();
 });
 
@@ -82,15 +89,19 @@ router.post('/user', (req, res, next) => {
 });
 
 router.delete('/mode', (req, res, next) => {
-    if(!req.body.name) return res.status(400).send();
-    ConfigAccess.deleteConfig(req.body.name);
+    if(!req.query.name) return res.status(400).send();
+    ConfigAccess.deleteConfig(req.query.name);
     res.status(200).send();
 });
 
 router.delete('/user', (req, res, next) => {
-    if(!req.body.name || !req.body.userID) return res.status(400).send();
-    ConfigAccess.removeUserFromConfig(req.body.name, req.body.userID);
+    if(!req.query.name || !req.query.userID) return res.status(400).send();
+    ConfigAccess.removeUserFromConfig(req.query.name, req.query.userID);
     res.status(200).send();
 });
+
+setInterval(function() {
+	ConfigAccess.updateConfigFile();
+}, 1000)
 
 module.exports = router;
