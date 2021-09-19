@@ -1,7 +1,7 @@
 const router = require('express').Router();
 const path = require('path');
 const upload = require('multer')({ dest: 'configUploads/'});
-const ConfigAccess = require('../../services/configAccess').default;
+const ConfigAccess = require('../../services/configAccess');
 const jsonfile = require('jsonfile');
 
 

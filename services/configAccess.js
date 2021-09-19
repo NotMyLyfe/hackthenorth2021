@@ -8,16 +8,16 @@ class ConfigAccess{
     configuration = {};
 
     constructor(){
-        loadConfigFile();
+        this.loadConfigFile();
     }
 
     // Twilio functions
 
     updateTwilio(phoneNumber, originNumber, accountSID, accountToken){
-        configuration["phoneNumber"] = phoneNumber;
-        configuration["originNumber"] = originNumber;
-        configuration["accountSID"] = accountSID;
-        configuration["accountToken"] = accountToken;
+        this.configuration["phoneNumber"] = phoneNumber;
+        this.configuration["originNumber"] = originNumber;
+        this.configuration["accountSID"] = accountSID;
+        this.configuration["accountToken"] = accountToken;
     }
 
     getTwilio(){
@@ -30,76 +30,76 @@ class ConfigAccess{
     }
     
     getPhoneNumber(){
-        return configuration["phoneNumber"];
+        return this.configuration["phoneNumber"];
     }
 
     getOriginNumber(){
-        return configuration["originNumber"];
+        return this.configuration["originNumber"];
     }
 
     getAccountSID(){
-        return configuration["accountSID"];
+        return this.configuration["accountSID"];
     }
 
     getAccountToken(){
-        return configuration["accountToken"];
+        return this.configuration["accountToken"];
     }
 
     // Getters 
     getAllConfigNames(){
-        return Object.keys(configuration["configs"]);
+        return Object.keys(this.configuration["configs"]);
     }
 
     getConfig(name){
-        return configuration["configs"][name];
+        return this.configuration["configs"][name];
     }
 
     getType(name){
-        return configuration["configs"][name]["type"];
+        return this.configuration["configs"][name]["type"];
     }
 
     getTrigger(name){
-        return configuration["configs"][name]["trigger"];
+        return this.configuration["configs"][name]["trigger"];
     }
 
     getSound(name){
-        return configuration["configs"][name]["sound"];
+        return this.configuration["configs"][name]["sound"];
     }
 
     getIsUrgent(name){
-        return configuration["configs"][name]["isUrgent"];
+        return this.configuration["configs"][name]["isUrgent"];
     }
 
     // Setters
 
     setType(name, type){
-        configuration["configs"][name]["type"] = type;
+        this.configuration["configs"][name]["type"] = type;
     }
 
     setTrigger(name, trigger){
-        configuration["configs"][name]["trigger"] = trigger;
+        this.configuration["configs"][name]["trigger"] = trigger;
     }
 
     setSound(name, sound){
-        configuration["configs"][name]["sound"] = sound;
+        this.configuration["configs"][name]["sound"] = sound;
     }
 
     setIsUrgent(name, isUrgent){
-        configuration["configs"][name]["isUrgent"] = isUrgent;
+        this.configuration["configs"][name]["isUrgent"] = isUrgent;
     }
 
     // User related
     addUserToConfig(name, userID){
-        configuration["configs"][name]["users"].push(userID);
+        this.configuration["configs"][name]["users"].push(userID);
     }
 
     removeUserFromConfig(name, userID){
-        indexOfUser = configuration["configs"][name]["users"].indexOf(userID);
-        configuration["configs"][name]["users"].splice(indexOfUser, 1);
+        indexOfUser = this.configuration["configs"][name]["users"].indexOf(userID);
+        this.configuration["configs"][name]["users"].splice(indexOfUser, 1);
     }
 
     getUsers(name){
-        return configuration["configs"][name]["users"];
+        return this.configuration["configs"][name]["users"];
     }
 
     // Entire config related
@@ -111,7 +111,7 @@ class ConfigAccess{
                     sound: sound,
                     isUrgent: isUrgent,
                     users: users};
-        configuration["configs"][name] = configJSON;
+        this.configuration["configs"][name] = configJSON;
     }
 
     deleteConfig(name){
@@ -119,26 +119,26 @@ class ConfigAccess{
     }
 
     setCurrentConfig(name){
-        configuration["currentConfig"] = name;
+        this.configuration["currentConfig"] = name;
     }
 
     getCurrentConfig(){
-        return configuration["currentConfig"];
+        return this.configuration["currentConfig"];
     }
 
     overwrite(file){
-        configuration = file;
+        this.configuration = file;
     }
 
     // File IO functions
 
     loadConfigFile(){
-        configuration = jsonfile.readFileSync("configs.json", configuration);
+        this.configuration = jsonfile.readFileSync("configs.json", this.configuration);
 
     }
     updateConfigFile(){
-        jsonfile.writeFileSync("configs.json", configuration);
+        jsonfile.writeFileSync("configs.json", this.configuration);
     }
 
 }
-export default new ConfigAccess();
+module.exports = new ConfigAccess();
