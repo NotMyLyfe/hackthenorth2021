@@ -3,11 +3,13 @@ const router = require('express').Router();
 const axios = require('axios');
 const config = require('./api/config');
 
+const discordCache = {};
+
 router.use('/config', config);
 
 router.get("/discord/:id", async (req, res, next) => {
     try{
-        const discordResponse = await axios({
+        const discordResponse = discordCache[req.params.id] ? discordCache[req.params.id] : discordCache[req.params.id] = await axios({
             method: "GET",
             url: `https://discord.com/api/v9/users/${req.params.id}`,
             headers:{
