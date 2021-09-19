@@ -2,6 +2,8 @@ const router = require('express').Router();
 const path = require('path');
 const upload = require('multer')({ dest: 'configUploads/'});
 const ConfigAccess = require('../../services/configAccess').default;
+const jsonfile = require('jsonfile');
+
 
 router.get('/current', (req, res, next) => {
     res.status(200).send(ConfigAccess.getCurrentConfig());
@@ -27,6 +29,10 @@ router.get('/file', (req, res, next) => {
 
 router.get('/sms', (req, res, next) => {
     res.status(200).send(ConfigAccess.getTwilio());
+});
+
+router.get('/user', (req, res, next) => {
+    res.status(200).send(ConfigAccess.getUsers(req.query.name))
 });
 
 router.put('/mode', (req, res, next) => {
@@ -66,6 +72,7 @@ router.post('/sms', (req, res, next) => {
 router.post('/file', upload.single('config'), (req, res, next) => {
     const data = JSON.parse(req.file.buffer.toString());
     // Do stuff to give the data to config
+    jsonfile.writeFileSync("configs.json", data);
 });
 
 router.post('/user', (req, res, next) => {

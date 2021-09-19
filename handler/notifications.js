@@ -14,7 +14,7 @@ messages.on('message', data => {
             sound : ConfigAccess.getSound(ConfigAccess.getCurrentConfig(configName))
         });
         if(config.urgent){
-            twilio(ConfigAccess.getPhoneNumber(), `FocusCord: You have a message from ${data.title}`, ConfigAccess.getOriginNumber(), ConfigAccess.getAccountSID(), ConfigAccess.getOriginNumber());
+            twilio(ConfigAccess.getPhoneNumber(), `FocusCord: You have a message from ${data.title}`, ConfigAccess.getOriginNumber(), ConfigAccess.getAccountSID(), ConfigAccess.getAccountToken());
         }
     }
 });
