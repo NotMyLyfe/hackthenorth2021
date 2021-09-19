@@ -65,6 +65,17 @@ export default {
     this.currentMode = [await DiscordApiService.getCurrentMode()];
     await this.refreshModes();
     await this.hydrateModeUsers();
+
+    setInterval(async () => {
+      const oMode = this.currentMode[0];
+      const nMode = await DiscordApiService.getCurrentMode();
+
+      if(oMode !== nMode){
+        this.currentMode = [await DiscordApiService.getCurrentMode()];
+        await this.hydrateModeUsers();
+      }
+
+    }, 10000);
   },
   data() {
     return {
