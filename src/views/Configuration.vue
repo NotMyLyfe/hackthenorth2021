@@ -11,6 +11,7 @@
                 </a-list-item-meta>
               </a-list-item>
             </a-list>
+            <a-button type="primary" style="margin-top : 1vh;">Add New Configuration</a-button>
           </a-col>
           <a-col :span="16" :offset="2">
             <h1>Configuring Mode: <strong>{{selectedMode}}</strong></h1>
