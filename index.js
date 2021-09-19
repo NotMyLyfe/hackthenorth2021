@@ -3,6 +3,7 @@ const express = require('express');
 const app = express();
 const cors = require('cors');
 const api = require('./routes/api');
+const findp = require('find-process');
 
 const ConfigAccess = require('./services/configAccess');
 
@@ -23,7 +24,7 @@ weekday[4] = "Thursday";
 weekday[5] = "Friday";
 weekday[6] = "Saturday";
 
-setInterval(function() {
+setInterval(async function() {
 	const configNames = ConfigAccess.getAllConfigNames();
 	const currentMode = ConfigAccess.getCurrentConfig();
 	
@@ -33,10 +34,10 @@ setInterval(function() {
 	for(const mode of configNames){
 		const modeInfo = ConfigAccess.getConfig(mode);
 		if(modeInfo.automation === "app"){
-			const appName = modeInfo.automationData.app;
+			const appName = modeInfo.automationData.appName;
 			if(appName){
-				// check if the app is in the process list
-				if(true){
+				let findprocess = await findp('name', appName);
+				if(findprocess.length){
 					switchTarget = mode;
 					continue;
 				}
@@ -66,14 +67,13 @@ setInterval(function() {
 			}
 		}
 		
-		if(mode === currentMode){
+		if(mode === currentMode && ConfigAccess.getAutomation(currentMode) !== "none"){
 			// condition is no longer active, switch away!
 			switchAway = true;
 		}
 	}
 	
 	//console.log("switch target det", currentMode, switchTarget, switchAway);
-	
 	if(switchTarget !== false && switchTarget !== currentMode){
 		console.log("Switching to " + switchTarget);
 		ConfigAccess.setCurrentConfig(switchTarget);

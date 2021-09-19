@@ -15,5 +15,5 @@ module.exports = function sendSMS(phoneNumber, message, originNumber, accountSID
                password: authToken
         },
         headers: {"Content-Type": "application/x-www-form-urlencoded"}
-    })
+    }).catch(() => console.log("Couldn't send message!"));
 }
