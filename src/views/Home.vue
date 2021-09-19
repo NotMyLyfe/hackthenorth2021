@@ -7,39 +7,33 @@
         />
         <a-layout-content :style="{padding: '24px', margin: 0, minHeight: '280px' }">
           <a-row id = "changeStat">
-            <a-col :span="24"> CURRENT STATUS:&nbsp;&nbsp;&nbsp;
+            <a-col :span="24"><h2>CURRENT STATUS:</h2>
               <a-cascader :options="options"
                           :display-render="displayRender"
                           placeholder="Select Status"
+                          v-model="currentMode"
                           @change="switchMode" />
             </a-col>
           </a-row>
-          <a-row class="inbtw">
-            <a-col :span="6"> Only allow notifications for:
+          <a-row class="inbtw" v-if="currentMode[0] !== 'Disabled'">
+            <a-col :span="24"><h2>Only allow notifications for:</h2>
+            </a-col>
+            <a-col :span="24">
+              <a-list class="listScroller" item-layout="horizontal" :data-source="modeUsersRich" v-if="currentMode !== 'Disabled'">
+                <a-list-item slot="renderItem" slot-scope="item">
+                  <a-list-item-meta :description="item.id">
+                    <a slot="title" >{{item.username}}#{{item.discriminator}}</a>
+                    <a-avatar slot="avatar" :src="item.img"></a-avatar>
+                  </a-list-item-meta>
+                </a-list-item>
+              </a-list>
+            </a-col>
+            <a-col :span="24">
+              <router-link to="/configuration"><a-button id = "configBtn" type="primary">Configure Modes</a-button></router-link>
             </a-col>
           </a-row>
-          <a-row class="inbtw"></a-row>
-          <a-list class="listScroller" item-layout="horizontal" :data-source="data">
-            <a-list-item slot="renderItem" slot-scope="item">
-              <!--<a-list-item-meta
-                description="Ant Design, a design language for background applications, is refined by Ant UED Team"
-              >
-                <a slot="title" href="https://www.antdv.com/">{{ item.title }}</a>
-                <a-avatar
-                  slot="avatar"
-                  src="https://cdn.discordapp.com/attachments/698731617207844895/883936323772239902/richman.jpeg"
-                />
-              </a-list-item-meta>-->
-              <a-list-item-meta :description="item.userid">
-                <a slot="title" >{{ item.username }}</a>
-                <a-avatar slot="avatar" :src="item.pfp"></a-avatar>
-              </a-list-item-meta>
-            </a-list-item>
-          </a-list>
-          <a-row type = "flex" justify="end" id = "configRow">
-            <a-col :span="6">
-              <a-button id = "configBtn" type="primary">Configure Users</a-button>
-            </a-col>
+          <a-row class="inbtw" v-else>
+            <a-col :span="24"><h1>FocusCord is disabled. All notifications are permitted.</h1></a-col>
           </a-row>
         </a-layout-content>
       </a-layout>
@@ -64,96 +58,70 @@
   }
 </style>
 <script>
-const data = [
-  {
-    username : 'sa35577#6753',
-    userid : 454791971244867620,
-    pfp : 'https://cdn.discordapp.com/attachments/698731617207844895/883936323772239902/richman.jpeg',
-    
-  },
-  {
-    username : 'DavidH#0001',
-    userid : 859093199390113803,
-    pfp : 'https://cdn.discordapp.com/attachments/698731617207844895/888802373336727612/unknown.png'
-  },
-  {
-    username : 'TernMaex#6753',
-    userid : 454791971244867620,
-    pfp : 'https://cdn.discordapp.com/attachments/698731617207844895/883936323772239902/richman.jpeg',
-    
-  },
-  {
-    username : 'Sat#0001',
-    userid : 859093199390113803,
-    pfp : 'https://cdn.discordapp.com/attachments/698731617207844895/888802373336727612/unknown.png'
-  },
-  {
-    username : 'Gith#6753',
-    userid : 454791971244867620,
-    pfp : 'https://cdn.discordapp.com/attachments/698731617207844895/883936323772239902/richman.jpeg',
-    
-  },
-  {
-    username : 'MaexTurning#0001',
-    userid : 859093199390113803,
-    pfp : 'https://cdn.discordapp.com/attachments/698731617207844895/888802373336727612/unknown.png'
-  },
-  {
-    username : 'Armaan#6753',
-    userid : 454791971244867620,
-    pfp : 'https://cdn.discordapp.com/attachments/698731617207844895/883936323772239902/richman.jpeg',
-    
-  },
-  {
-    username : 'GordonLiLin#0001',
-    userid : 859093199390113803,
-    pfp : 'https://cdn.discordapp.com/attachments/698731617207844895/888802373336727612/unknown.png'
-  },
-]
+import * as DiscordApiService from '@/services/DiscordAPIService';
 export default {
   name: "Home",
+  async beforeMount() {
+    this.currentMode = [await DiscordApiService.getCurrentMode()];
+    await this.refreshModes();
+    await this.hydrateModeUsers();
+  },
   data() {
     return {
-      data,
-      options : [
-        {
-          value : 'disabled',
-          label : 'Disabled',
-        },
-        { 
-          value : 'urgent',
-          label : 'Urgent',
-          children : [
-            {
-              value : 'urgent-only',
-              label : 'Urgent ONLY',
-            },
-            {
-              value : 'urgent-sms',
-              label : 'Urgent To SMS',
-            },
-          ],
-        },
-        {
-          value : 'custom',
-          label : 'Custom',
-          children : [
-            
-          ],
-        },
-
-      ]
+      currentMode: ["Disabled"],
+      modeUsersRich: [],
+      options : []
     }
   },
   methods : {
-    /*onChange(value) {
-      console.log(value);
-    }*/
+    async refreshModes() {
+      const modes = await DiscordApiService.getModes();
+      const modesHydrated = [{
+        value: "Disabled",
+        label: "Disabled"
+      }];
+      for(const mode of modes){
+        modesHydrated.push({
+          value: mode,
+          label: mode
+        })
+      }
+      this.options = modesHydrated;
+    },
+    async hydrateModeUsers() {
+      if(this.currentMode[0] !== 'Disabled'){
+        const modeInfo = await DiscordApiService.getMode(this.currentMode[0]);
+        this.modeUsersRich = [];
+        const startingMode = this.currentMode[0];
+        for(const userID of modeInfo.users){
+          // replace with IPC call
+          DiscordApiService.getUserInfoFromID(userID).then((userInfo) => {
+            console.log(userInfo);
+            if(startingMode === this.currentMode[0]){
+              this.modeUsersRich.push({
+                img: this.buildUserAvaterURL(userInfo.id, userInfo.discriminator, userInfo.avatar),
+                ...userInfo,
+              });
+            }
+          })
+
+        }
+      }
+    },
+    buildUserAvaterURL(id, disc, avatar) {
+      if(avatar){
+        return `https://cdn.discordapp.com/avatars/${id}/${avatar}.png`
+      }
+      else {
+        return `https://cdn.discordapp.com/embed/avatars/${Number(disc) % 5}.png`
+      }
+    },
     displayRender({ labels }) {
       return labels[labels.length-1];
     },
-    switchMode() {
-
+    async switchMode() {
+      await DiscordApiService.setCurrentMode(this.currentMode[0]);
+      await this.hydrateModeUsers();
     }
   }
 }

@@ -9,32 +9,30 @@
         <a-row class = "rowGap" id="accountSID">
           <a-col>
             String Identifier:
-            <a-input placeholder="Enter a valid String Identifier." />
+            <a-input placeholder="Enter a valid String Identifier." v-model="smsInfo.accountSID"/>
           </a-col>
         </a-row>
         <a-row class = "rowGap" id="accountToken">
           <a-col>
             Account Token:
-            <a-input placeholder="Enter a valid Account Token." />
+            <a-input placeholder="Enter a valid Account Token." v-model="smsInfo.accountToken"/>
           </a-col>
         </a-row>
         <a-row class = "rowGap" id="originNumber">
           <a-col>
             Sending Phone Number:
-            <a-input placeholder="Don't mess up the number!" />
+            <a-input placeholder="Don't mess up the number!" v-model="smsInfo.originNumber"/>
           </a-col>
         </a-row>
         <a-row class = "rowGap" id="phoneNumber">
           <a-col>
             Receiving Phone Number:
-            <a-input placeholder="Enter your number (or prank a friend)" />
+            <a-input placeholder="Enter your number (or prank a friend)" v-model="smsInfo.phoneNumber"/>
           </a-col>
         </a-row>
         <a-row type = "flex" justify="end" id = "configRow">
           <a-col>
-            <a-button type="danger">Cancel</a-button>
-            &nbsp;
-            <a-button type="primary">Save Changes</a-button>
+            <a-button type="primary" @click="saveChanges">Save Changes</a-button>
           </a-col>
         </a-row>
       </a-layout-content>
@@ -53,15 +51,27 @@
   }
 </style>
 <script>
-
+import * as DiscordApiService from '@/services/DiscordAPIService';
+import Swal from 'sweetalert2';
 export default {
+  name: "SMS",
+  async beforeMount() {
+    this.smsInfo = await DiscordApiService.getSMSConfig();
+  },
   data() {
     return {
-    
+      smsInfo : {}
     }
   },
   methods : {
-    
+    async saveChanges() {
+      await DiscordApiService.setSMS(this.smsInfo.phoneNumber, this.smsInfo.originNumber, this.smsInfo.accountSID, this.smsInfo.accountToken);
+      Swal.fire({
+        icon: "success",
+        title: "Success",
+        text: "SMS settings updated!"
+      })
+    }
   }
 }
 </script>
