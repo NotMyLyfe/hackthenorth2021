@@ -80,6 +80,13 @@
           </a-col>
         </a-row>
       </a-layout-content>
+      <a-row type = "flex" justify="end" id = "configRow">
+          <a-col>
+            <a-button type="danger">Cancel</a-button>
+            &nbsp;
+            <a-button type="primary">Save Changes</a-button>
+          </a-col>
+        </a-row>
     </a-layout>
   </div>
 </template>
@@ -191,4 +198,7 @@ export default {
 </script>
 
 <style>
+  #configRow {
+      margin-top: 1vh;
+  }
 </style>
