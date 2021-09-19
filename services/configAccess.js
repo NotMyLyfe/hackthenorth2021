@@ -20,6 +20,15 @@ class ConfigAccess{
         configuration["accountToken"] = accountToken;
     }
 
+    getTwilio(){
+        return{
+            phoneNumber : this.getPhoneNumber(),
+            originNumber : this.getOriginNumber(),
+            accountSID : this.getAccountSID(),
+            accountToken : this.getAccountToken()
+        }
+    }
+    
     getPhoneNumber(){
         return configuration["phoneNumber"];
     }
@@ -35,9 +44,14 @@ class ConfigAccess{
     getAccountToken(){
         return configuration["accountToken"];
     }
+
     // Getters 
     getAllConfigNames(){
         return Object.keys(configuration["configs"]);
+    }
+
+    getConfig(name){
+        return configuration["configs"][name];
     }
 
     getType(name){
@@ -67,7 +81,7 @@ class ConfigAccess{
     }
 
     setSound(name, sound){
-        configuration["configs"][name]["sound"] = setSound;
+        configuration["configs"][name]["sound"] = sound;
     }
 
     setIsUrgent(name, isUrgent){
@@ -96,7 +110,7 @@ class ConfigAccess{
                     trigger: trigger,
                     sound: sound,
                     isUrgent: isUrgent,
-                    users: []};
+                    users: users};
         configuration["configs"][name] = configJSON;
     }
 
@@ -112,6 +126,10 @@ class ConfigAccess{
         return configuration["currentConfig"];
     }
 
+    overwrite(file){
+        configuration = file;
+    }
+
     // File IO functions
 
     loadConfigFile(){
@@ -123,3 +141,4 @@ class ConfigAccess{
     }
 
 }
+export default new ConfigAccess();

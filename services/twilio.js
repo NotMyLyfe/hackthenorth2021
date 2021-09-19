@@ -1,18 +1,18 @@
 require("dotenv").config();
-import qs from "qs"
+const qs = require("qs");
 const axios = require('axios');
 
-export default function sendSMS(phoneNumber, message){
+module.exports = function sendSMS(phoneNumber, message, originNumber, accountSID, authToken){
     axios({
         method: "POST",
-        url: `https://api.twilio.com/2010-04-01/Accounts/${process.env.TWILIO_ACCOUNT_SID}/Messages.json`,
+        url: `https://api.twilio.com/2010-04-01/Accounts/${accountSID}/Messages.json`,
         data: qs.stringify({
             Body: message,
-            From: "+12543472673",
+            From: originNumber,
             To: phoneNumber
         }),
-        auth: {username: process.env.TWILIO_ACCOUNT_SID,
-               password: process.env.TWILIO_AUTH_TOKEN
+        auth: {username: accountSID,
+               password: authToken
         },
         headers: {"Content-Type": "application/x-www-form-urlencoded"}
     })
